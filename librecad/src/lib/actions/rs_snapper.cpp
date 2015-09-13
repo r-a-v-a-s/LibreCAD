@@ -681,13 +681,19 @@ void RS_Snapper::drawSnapper() {
                         container->addEntity(circle);
 
                         // crosshairs:
-                        if (showCrosshairs==true) {
-                            if(graphicView->isGridIsometric()) {//isometric crosshair
+                        if (showCrosshairs==true)
+                        {
+                            if(graphicView->isGridIsometric())
+                            {
+                                //isometric crosshair
+
                                 RS2::CrosshairType chType=graphicView->getCrosshairType();
                                 RS_Vector direction1;
                                 RS_Vector direction2(0.,1.);
                                 double l=graphicView->getWidth()+graphicView->getHeight();
-                                switch(chType){
+
+                                switch(chType)
+                                {
                                 case RS2::RightCrosshair:
                                     direction1=RS_Vector(M_PI*5./6.)*l;
                                     direction2*=l;
@@ -700,6 +706,7 @@ void RS_Snapper::drawSnapper() {
                                     direction1=RS_Vector(M_PI*1./6.)*l;
                                     direction2=RS_Vector(M_PI*5./6.)*l;
                                 }
+
                                 RS_Vector center(graphicView->toGui(snapCoord));
 								RS_OverlayLine *line=new RS_OverlayLine(nullptr,RS_LineData(center-direction1,center+direction1));
                                 line->setPen(crossHairPen);
@@ -707,16 +714,33 @@ void RS_Snapper::drawSnapper() {
 								line=new RS_OverlayLine(nullptr,RS_LineData(center-direction2,center+direction2));
                                 line->setPen(crossHairPen);
                                 container->addEntity(line);
-                            }else{//orthogonal crosshair
+                            }
+                            else
+                            {
+                                //orthogonal crosshair
 
+                                RS_OverlayLine* line;
+                                RS_Vector point1;
+                                RS_Vector point2;
 
-								RS_OverlayLine *line=new RS_OverlayLine(nullptr, RS_LineData(RS_Vector(0, graphicView->toGuiY(snapCoord.y)),
-                                                                                          RS_Vector(graphicView->getWidth(), graphicView->toGuiY(snapCoord.y))));
+                                point1 = RS_Vector(0, 0);
+                                point2 = RS_Vector(graphicView->toGuiX(snapCoord.x), graphicView->toGuiY(snapCoord.y));
+                                line=new RS_OverlayLine(nullptr, RS_LineData(point1, point2));
                                 line->setPen(crossHairPen);
                                 container->addEntity(line);
 
-								line=new RS_OverlayLine(nullptr, RS_LineData(RS_Vector(graphicView->toGuiX(snapCoord.x),0),
-                                                                          RS_Vector(graphicView->toGuiX(snapCoord.x), graphicView->getHeight())));
+                                point1 = RS_Vector(0,graphicView->getHeight());
+                                line=new RS_OverlayLine(nullptr, RS_LineData(point1, point2));
+                                line->setPen(crossHairPen);
+                                container->addEntity(line);
+
+                                point1 = RS_Vector(graphicView->getWidth(), 0);
+                                line=new RS_OverlayLine(nullptr, RS_LineData(point1, point2));
+                                line->setPen(crossHairPen);
+                                container->addEntity(line);
+
+                                point1 = RS_Vector(graphicView->getWidth(),graphicView->getHeight());
+                                line=new RS_OverlayLine(nullptr, RS_LineData(point1, point2));
                                 line->setPen(crossHairPen);
                                 container->addEntity(line);
                             }
